@@ -1,44 +1,72 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { EyeIcon, EyeOffIcon } from "lucide-react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { signUp } from "@/lib/auth"
+import type React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { toast } from "react-hot-toast"; // Import toast
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { signUp, saveUserToDB } from "@/lib/auth"; // Import saveUserToDB function
 
 export default function Signup() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [major, setMajor] = useState("")
-  const [error, setError] = useState("")
-  const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [major, setMajor] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
+  const router = useRouter();
 
+ 
   const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
+    setLoading(true); // Show loading state
+    setError("");
+
     try {
-      await signUp(email, password, name)
-      // You might want to create a user profile in your database here
-      router.push("/dashboard")
-    } catch (err) {
-      setError("Failed to sign up. Please try again.")
+      console.log("🚀 Signing up user...");
+      await signUp(email, password, name, major);
+
+      toast.success("🎉 Account created successfully!");
+      router.push("/dashboard");
+    } catch (err: any) {
+      console.error("❌ Signup Error:", err.message || err);
+      setError("Failed to sign up. Please try again.");
+      toast.error("❌ Signup failed! Check console logs.");
+    } finally {
+      setLoading(false); // Hide loading state
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 to-white py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">Create your StudPal account</CardTitle>
-          <CardDescription className="text-center">Start organizing your academic life today</CardDescription>
+          <CardTitle className="text-2xl font-bold text-center">
+            Create your StudPal account
+          </CardTitle>
+          <CardDescription className="text-center">
+            Start organizing your academic life today
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-6" onSubmit={handleSignup}>
@@ -46,10 +74,8 @@ export default function Signup() {
               <Label htmlFor="name">Full name</Label>
               <Input
                 id="name"
-                name="name"
                 type="text"
                 required
-                className="mt-1"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -59,11 +85,9 @@ export default function Signup() {
               <Label htmlFor="email">Email address</Label>
               <Input
                 id="email"
-                name="email"
                 type="email"
                 autoComplete="email"
                 required
-                className="mt-1"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -74,7 +98,6 @@ export default function Signup() {
               <div className="mt-1 relative">
                 <Input
                   id="password"
-                  name="password"
                   type={showPassword ? "text" : "password"}
                   autoComplete="new-password"
                   required
@@ -113,8 +136,8 @@ export default function Signup() {
 
             {error && <p className="text-red-500 text-sm">{error}</p>}
 
-            <Button type="submit" className="w-full">
-              Sign up
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Signing up..." : "Sign up"}
             </Button>
           </form>
         </CardContent>
@@ -128,6 +151,5 @@ export default function Signup() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
-
