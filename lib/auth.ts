@@ -12,7 +12,7 @@ export async function signUp(email: string, password: string, name: string) {
 
 export async function login(email: string, password: string) {
   try {
-    const session = await account.createEmailSession(email, password)
+    const session = await account.createSession(email, password)
     return session
   } catch (error) {
     console.error("Error logging in:", error)
