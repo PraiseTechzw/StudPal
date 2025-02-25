@@ -261,7 +261,13 @@ export default function Home() {
   )
 }
 
-function FeatureCard({ icon, title, description }) {
+interface FeatureCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+function FeatureCard({ icon, title, description }: FeatureCardProps) {
   return (
     <div className="bg-gray-50 p-6 rounded-lg shadow-lg text-center transition-transform hover:scale-105">
       <div className="mb-4">{icon}</div>
@@ -292,7 +298,14 @@ const testimonials = [
   },
 ]
 
-function TestimonialCard({ name, role, image, quote }) {
+interface TestimonialCardProps {
+  name: string;
+  role: string;
+  image: string;
+  quote: string;
+}
+
+function TestimonialCard({ name, role, image, quote }: TestimonialCardProps) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-xl text-gray-800">
       <p className="mb-4 text-lg italic">"{quote}"</p>
