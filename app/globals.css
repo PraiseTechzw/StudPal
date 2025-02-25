@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -60,39 +57,17 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-}
 
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  * {
+    @apply border-border;
   }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
-  }
-}
-
-
-
-@layer base {}
-
-
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }
